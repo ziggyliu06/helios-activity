@@ -16,4 +16,4 @@ Before using this software, make sure that the teacher or parent already has the
 
 1. Click main.py to start the program
 2. Enter the student name and ID number
-3. Click start and the program will start 
+3. Click start and the program will start

@@ -11,14 +11,22 @@ from firebase_admin import credentials
 from firebase_admin import db
 from timeloop import Timeloop
 from datetime import timedelta
-import json
-import pickle
-import random
-from os.path import exists as file_exists
-from keyboard_model import make_keyboard_model
+# import json
+# import pickle
+# import random
+# from os.path import exists as file_exists
+# from keyboard_model import make_keyboard_model
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
+    return os.path.join(base_path, relative_path)
 # Fetch the service account key JSON file contents
-cred = credentials.Certificate('model/ziggy-project-2-firebase-adminsdk-k97lv-cb69583cd7.json')
+cred = credentials.Certificate(resource_path('model/ziggy-project-2-firebase-adminsdk-k97lv-cb69583cd7.json'))
 # Initialize the app with a service account, granting admin privileges
 firebase_admin.initialize_app(cred, {
     'databaseURL': "https://ziggy-project-2-default-rtdb.firebaseio.com"

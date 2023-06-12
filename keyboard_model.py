@@ -101,13 +101,13 @@ def make_keyboard_model():
 
     #print(sorted(vectorizer.vocabulary_.items(), key = lambda x : x[1], reverse = True))
     #Save vectorizer.vocabulary_
-    pickle.dump(vectorizer.vocabulary_, open("feature.pkl","wb"))
+    pickle.dump(vectorizer.vocabulary_, open("model/feature.pkl","wb"))
     print("Finished First Dump")
 
     # Classification Model
     model = svm.SVC()
     model.fit(input_data, df['target'])
-    filename = 'keyboard_model.sav'
+    filename = 'model/keyboard_model.sav'
     pickle.dump(model, open(filename, 'wb'))
     print("Finished Second Dump")
 

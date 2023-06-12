@@ -6,14 +6,24 @@ import time
 import _thread
 import pickle
 from os.path import exists as file_exists
-from mouse_model import make_mouse_model
-from keyboard_model import make_keyboard_model
+# from mouse_model import make_mouse_model
+# from keyboard_model import make_keyboard_model
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 
 from firebase_notification import send_notification, send_notification_real_time, send_notification_real_time_key, \
     send_notification_mouse_click_AI, send_notification_keyboard_press_AI
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 class Tracker:
     def __init__(self, userId, parentID):
@@ -47,28 +57,28 @@ class Tracker:
             on_release=self.on_release)
         self.keyboard_listener.start()
 
-        filenameMouse = 'mouse_model.sav'
+        filenameMouse = resource_path("model/mouse_model.sav")
         if (not file_exists(filenameMouse)):
-            make_mouse_model()
+            # make_mouse_model()
             print("File " + filenameMouse + " did not exist")
         else:
             print("File " + filenameMouse + " exists")
         self.mouse_model = pickle.load(open(filenameMouse, 'rb'))
         self.mouse_clicked_class = {0: "Not Paying Attention", 1: "Paying Attention"}
 
-        filenameKeyboard = 'keyboard_model.sav'
+        filenameKeyboard = resource_path('model/keyboard_model.sav')
         # if(not file_exists(filenameKeyboard)):
         #     make_keyboard_model()
         #     print("File " + filenameKeyboard + " did not exist")
         # else:
         #     print("File " + filenameKeyboard + " exists")
-        make_keyboard_model()
+        # make_keyboard_model()
         self.keyboard_model = pickle.load(open(filenameKeyboard, 'rb'))
         self.keyboard_class_target = ['dialog', 'note']
 
         #Load Vocabulary
         self.transformer = TfidfTransformer()
-        self.load_vec = CountVectorizer(decode_error="replace", vocabulary=pickle.load(open("feature.pkl","rb")))
+        self.load_vec = CountVectorizer(decode_error="replace", vocabulary=pickle.load(open(resource_path("model/feature.pkl"),"rb")))
         self.keyboard_modelMade = True
 
     # Update this later

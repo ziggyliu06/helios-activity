@@ -32,5 +32,5 @@ def make_mouse_model():
         print('prediction: ' + str(mouse_clicked_class[pred[0]]))
     '''
     # To save the model
-    filename = 'mouse_model.sav'
+    filename = 'model/mouse_model.sav'
     pickle.dump(model, open(filename, 'wb'))
