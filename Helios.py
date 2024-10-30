@@ -1,21 +1,21 @@
-import tkinter
-from mouse_model import make_mouse_model
-from tracker import Tracker
-from tkinter import ttk
-from tkinter import messagebox
+import os
+import sys
 import time
+import tkinter
 import urllib.request
-from firebase_notification import send_notification
+from datetime import timedelta
+from tkinter import messagebox
+from tkinter import ttk
+
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
 from timeloop import Timeloop
-from datetime import timedelta
-# import json
-# import pickle
-# import random
-# from os.path import exists as file_exists
-# from keyboard_model import make_keyboard_model
+
+from firebase_notification import send_notification
+from tracker import Tracker
+
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -25,6 +25,8 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
 
     return os.path.join(base_path, relative_path)
+
+
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate(resource_path('model/ziggy-project-2-firebase-adminsdk-k97lv-cb69583cd7.json'))
 # Initialize the app with a service account, granting admin privileges
@@ -41,14 +43,16 @@ global parent_ID
 global t1
 t1 = Timeloop()
 
-@t1.job(interval = timedelta(seconds=15))
+
+@t1.job(interval=timedelta(seconds=15))
 def send_predictions():
     global t
-    if(t != None and t.modelsMade()):
+    if (t != None and t.modelsMade()):
         t.send_mouse_pred()
         t.send_keyboard_pred()
     else:
         print("Something broke")
+
 
 def check_connection():
     try:
@@ -67,7 +71,7 @@ def verify_user():
     if check_connection():
         for i in ref.get():
             for student in ref.child(i).child("Student List").get():
-                #print(ref.child(i).child("Student List").child(student).get())
+                # print(ref.child(i).child("Student List").child(student).get())
                 if stu_ID == ref.child(i).child("Student List").child(student).get():
                     parent_ID = i
                     print(parent_ID)
@@ -135,4 +139,3 @@ loginButton.grid(pady=20)
 endButton = ttk.Button(frm, text="End", command=end_tracking)
 root_window.protocol("WM_DELETE_WINDOW", on_closing)
 root_window.mainloop()
-
